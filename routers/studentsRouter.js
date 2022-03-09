@@ -1,56 +1,17 @@
+const studentsRouter = require('express').Router()
 
-const express = require("express");
-const {students} = require("../data/index");
-const validateStudentId = require("../middleware/validateStudentId")
+studentsRouter.get('/', async (req, res) => {
+  
+})
 
-const StudentsRouter = express.Router();
-StudentsRouter.use("/:studentId", validateStudentId)
+studentsRouter.post('/', async (req, res) => {})
 
-StudentsRouter.get("/", (req, res) => {
-  res.json(students);
-});
+studentsRouter.get('/:id', async (req, res) => {})
 
-StudentsRouter.get("/:studentId", (req, res) => {
-  const id = parseInt(req.params.studentId)
-  res.json(students[req.studentIndex])
-});
+studentsRouter.patch('/:id', async (req, res) => {})
 
-StudentsRouter.post("/", (req, res) => {
-  const {data} = req.body
-  if (data.type === "students") {
-    let id = Date.now()
-    data.attributes.id = id
-    students.push(data.attributes)
-    res.status(201).json(students)
-  } 
-});
+studentsRouter.put('/:id', async (req, res) => {})
 
-StudentsRouter.put("/:studentId", (req, res) => {
-  const id = parseInt(req.params.studentId)
-  const updatedStudent = {
-      ...req.body?.data?.attributes,
-      id
-  }
-  students[req.studentIndex] = updatedStudent
-  res.json(updatedStudent)
-});
+studentsRouter.delete('/:id', async (req, res) => {})
 
-StudentsRouter.patch("/:studentId", (req, res) => {
-  const id = parseInt(req.params.studentId)
-  const updatedStudent = Object.assign(
-    {},
-    students[req.studentIndex],
-    req.body?.data?.attributes,
-    {id}
-  )
-  students[req.studentIndex] = updatedStudent
-  res.json(updatedStudent)
-});
-
-StudentsRouter.delete("/:studentId", (req, res) => {
-  const deletedStudent = students[req.studentIndex]
-  students.splice(req.studentIndex, 1)
-  res.send(deletedStudent)
-});
-
-module.exports = StudentsRouter
+module.exports = studentsRouter

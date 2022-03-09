@@ -1,6 +1,4 @@
-
 const mongoose = require ("mongoose")
-const Course = mongoose.model("Course", schema)
 
 const schema = new mongoose.Schema ({
   code:{type: String, maxlength: 16, required: true},
@@ -9,5 +7,6 @@ const schema = new mongoose.Schema ({
   url: {type: String, maxlength: 512},
   students: [{type: mongoose.Schema.Types.ObjectId, ref: "Student"}]
 })
+const Course = mongoose.model("Course", schema)
 
 module.exports = Course

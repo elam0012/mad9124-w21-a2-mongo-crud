@@ -18,14 +18,12 @@ mongoose.connect('mongodb://localhost:27017/assignment-2', {
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
-// const studentsRouter = require("./routers/studentsRouter.js")
-// const coursesRouter = require("./routers/coursesRouter.js")
 
 // configure the middleware
 app.use(morgan('tiny'))
 app.use(express.json())
-// app.use("/api/students", studentsRouter)
-// app.use("/api/courses", coursesRouter)
+app.use("/api/students", require("./routers/studentsRouter.js"))
+app.use("/api/courses", require("./routers/coursesRouter.js"))
 
 //start the web server
 const port = process.env.PORT || 3030
