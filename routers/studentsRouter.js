@@ -6,7 +6,15 @@ studentsRouter.get('/', async (req, res) => {
   res.send({data: students})
 })
 
-studentsRouter.post('/', async (req, res) => {})
+studentsRouter.post('/', async (req, res) => {
+  let data = req.body.data
+  delete data._id
+
+  let newStudent = new Student(data)
+  await newStudent.save()
+
+  res.status(201).send({data: newStudent})
+})
 
 studentsRouter.get('/:id', async (req, res) => {})
 
