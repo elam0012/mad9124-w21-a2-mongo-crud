@@ -26,7 +26,23 @@ studentsRouter.get('/:id', async (req, res) => {
   }
 })
 
-studentsRouter.patch('/:id', async (req, res) => {})
+studentsRouter.patch('/:id', async (req, res) => {
+  try {
+    const {_id, ...otherAttributes} = req.body.data
+    const student = await Student.findByIdAndUpdate(
+      req.params.id,
+      {_id: req.params.id, ...otherAttributes},
+      {
+        new: true,
+        runValidators: true
+      }
+    )
+    if (!student) throw new Error('Resource not found')
+    res.send({data: student})
+  } catch (err) {
+    sendResourceNotFound(req, res)
+  }
+})
 
 studentsRouter.put('/:id', async (req, res) => {})
 
