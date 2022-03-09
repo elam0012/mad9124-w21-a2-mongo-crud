@@ -1,7 +1,9 @@
 const studentsRouter = require('express').Router()
+const Student = require('../models/Student')
 
 studentsRouter.get('/', async (req, res) => {
-  
+  const students = await Student.find()
+  res.send({data: students})
 })
 
 studentsRouter.post('/', async (req, res) => {})

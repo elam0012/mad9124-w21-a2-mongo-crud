@@ -4,8 +4,8 @@ const mongoose = require('mongoose')
 
 mongoose.connect('mongodb://localhost:27017/assignment-2', {
     useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
+    // useCreateIndex: true,
+    // useFindAndModify: false,
     useUnifiedTopology: true
   })
   .then(() => console.log('Connected to MongoDB ...'))
@@ -23,7 +23,7 @@ const app = express()
 app.use(morgan('tiny'))
 app.use(express.json())
 app.use("/api/students", require("./routers/studentsRouter.js"))
-app.use("/api/courses", require("./routers/coursesRouter.js"))
+// app.use("/api/courses", require("./routers/coursesRouter.js"))
 
 //start the web server
 const port = process.env.PORT || 3030
