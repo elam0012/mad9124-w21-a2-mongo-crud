@@ -4,7 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "NODE_ENV=production PORT=433 node app.js",
+    "dev": "DEBUG=mad9124-w21-a2-mongo-crud* NODE_ENV=dev PORT=3030 nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "MAD9124",
