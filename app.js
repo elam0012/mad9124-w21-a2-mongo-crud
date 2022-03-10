@@ -23,7 +23,7 @@ const app = express()
 app.use(morgan('tiny'))
 app.use(express.json())
 app.use("/api/students", require("./routers/studentsRouter.js"))
-// app.use("/api/courses", require("./routers/coursesRouter.js"))
+app.use("/api/courses", require("./routers/coursesRouter.js"))
 
 //start the web server
 const port = process.env.PORT || 3030

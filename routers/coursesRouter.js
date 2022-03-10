@@ -1,56 +1,89 @@
+const coursesRouter = require('express').Router()
+const Course = require('../models/Course')
 
-const express = require("express");
-const {courses} = require("../data/index");
-const validateCourseId = require("../middleware/validateCourseId");
+coursesRouter.get('/', async (req, res) => {
+  const courses = await Course.find()
+  res.send({data: courses})
+})
 
-const coursesRouter = express.Router();
-coursesRouter.use("/:courseId", validateCourseId)
+coursesRouter.post('/', async (req, res) => {
+  console.log(req.body.data)
+  let data = req.body.data
+  delete data._id
 
-coursesRouter.get("/", (req, res) => {
-  res.json(courses)
-});
+  let newCourse = new Course(data)
+  await newCourse.save()
 
-coursesRouter.get("/:courseId", (req, res) => {
-  const id = parseInt(req.params.courseId)
-  res.json(courses[req.courseIndex])
-});
+  res.status(201).send({data: newCourse})
+})
 
-coursesRouter.post("/", (req, res) => {
-  const {data} = req.body
-  if (data.type === "courses") {
-    let id = Date.now()
-    data.attributes.id = id
-    courses.push(data.attributes)
-    res.status(201).json(courses)
-  } 
-});
-
-coursesRouter.put("/:courseId", (req, res) => {
-  const id = parseInt(req.params.courseId)
-  const updatedCourse = {
-      ...req.body?.data?.attributes,
-      id
+coursesRouter.get('/:id', async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id)
+    if (!course) throw new Error('Resource not found')
+    res.send({data: course})
+  } catch (err) {
+    sendResourceNotFound(req, res)
   }
-  courses[req.courseIndex] = updatedCourse
-  res.json(updatedCourse)
-});
+})
 
-coursesRouter.patch("/:courseId", (req, res) => {
-  const id = parseInt(req.params.courseId)
-  const updatedCourse = Object.assign(
-    {},
-    courses[req.courseIndex],
-    req.body?.data?.attributes,
-    {id}
-  )
-  courses[req.courseIndex] = updatedCourse
-  res.json(updatedCourse)
-});
+coursesRouter.patch('/:id', async (req, res) => {
+  try {
+    const {_id, ...otherAttributes} = req.body.data
+    const course = await Course.findByIdAndUpdate(
+      req.params.id,
+      {_id: req.params.id, ...otherAttributes},
+      {
+        new: true,
+        runValidators: true
+      }
+    )
+    if (!course) throw new Error('Resource not found')
+    res.send({data: course})
+  } catch (err) {
+    sendResourceNotFound(req, res)
+  }
+})
 
-coursesRouter.delete("/:courseId", (req, res) => {
-  const deletedCourse = courses[req.courseIndex]
-  courses.splice(req.courseIndex, 1)
-  res.send(deletedCourse)
-});
+coursesRouter.put('/:id', async (req, res) => {
+  try {
+    const {_id, ...otherAttributes} = req.body.data
+    const course = await Course.findByIdAndUpdate(
+      req.params.id,
+      {_id: req.params.id, ...otherAttributes},
+      {
+        new: true,
+        overwrite: true,
+        runValidators: true
+      }
+    )
+    if (!course) throw new Error('Resource not found')
+    res.send({data: course})
+  } catch (err) {
+    sendResourceNotFound(req, res)
+  }
+})
+
+coursesRouter.delete('/:id', async (req, res) => {
+  try {
+    const course = await Course.findByIdAndRemove(req.params.id)
+    if (!course) throw new Error('Resource not found')
+    res.send({data: course})
+  } catch (err) {
+    sendResourceNotFound(req, res)
+  }
+})
+
+function sendResourceNotFound(req, res) {
+  res.status(404).send({
+    errors: [
+      {
+        status: '404',
+        title: 'Resource does not exist',
+        description: `We could not find a course with id: ${req.params.id}`
+      }
+    ]
+  })
+}
 
 module.exports = coursesRouter
