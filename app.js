@@ -1,6 +1,7 @@
 'use strict'
 
 const debug = require('debug')('mad9124-w21-a2-mongo-crud')
+const sanitizeMongo = require('express-mongo-sanitize')
 require('./startup/database')
 
 //load dependencies
@@ -13,6 +14,7 @@ app.use(morgan('tiny'))
 app.use(express.json())
 app.use("/api/students", require("./routers/studentsRouter.js"))
 app.use("/api/courses", require("./routers/coursesRouter.js"))
+app.use(sanitizeMongo())
 
 //start the web server
 const port = process.env.PORT || 3030

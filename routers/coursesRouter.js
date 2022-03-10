@@ -6,7 +6,7 @@ coursesRouter.get('/', async (req, res) => {
   res.send({data: courses})
 })
 
-coursesRouter.post('/', async (req, res) => {
+coursesRouter.post('/', sanitizeBody, async (req, res) => {
   try {
     const newCourse = new Course(req.sanitizedBody)
     await newCourse.save()
