@@ -1,19 +1,20 @@
 const studentsRouter = require('express').Router()
 const Student = require('../models/Student')
+const sanitizeBody = require('../middleware/sanitizeBody')
 
 studentsRouter.get('/', async (req, res) => {
   const students = await Student.find()
   res.send({data: students})
 })
 
-studentsRouter.post('/', async (req, res) => {
-  let data = req.body.data
-  delete data._id
-
-  let newStudent = new Student(data)
-  await newStudent.save()
-
-  res.status(201).send({data: newStudent})
+studentsRouter.post('/', sanitizeBody, async (req, res) => {
+  try {
+    const newStudent = new Student(req.sanitizedBody)
+    await newStudent.save()
+    res.status(201).send({data: newStudent})
+  } catch (err) {
+    sendResourceNotFound(req, res)
+  }
 })
 
 studentsRouter.get('/:id', async (req, res) => {

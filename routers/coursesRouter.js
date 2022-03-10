@@ -7,14 +7,13 @@ coursesRouter.get('/', async (req, res) => {
 })
 
 coursesRouter.post('/', async (req, res) => {
-  console.log(req.body.data)
-  let data = req.body.data
-  delete data._id
-
-  let newCourse = new Course(data)
-  await newCourse.save()
-
-  res.status(201).send({data: newCourse})
+  try {
+    const newCourse = new Course(req.sanitizedBody)
+    await newCourse.save()
+    res.status(201).send({data: newCourse})
+  } catch (err) {
+    sendResourceNotFound(req, res)
+  }
 })
 
 coursesRouter.get('/:id', async (req, res) => {
