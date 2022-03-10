@@ -2,7 +2,7 @@ const coursesRouter = require('express').Router()
 const Course = require('../models/Course')
 
 coursesRouter.get('/', async (req, res) => {
-  const courses = await Course.find()
+  const courses = await Course.find().populate('students')
   res.send({data: courses})
 })
 
@@ -19,7 +19,7 @@ coursesRouter.post('/', async (req, res) => {
 
 coursesRouter.get('/:id', async (req, res) => {
   try {
-    const course = await Course.findById(req.params.id)
+    const course = await Course.findById(req.params.id).populate('students')
     if (!course) throw new Error('Resource not found')
     res.send({data: course})
   } catch (err) {
