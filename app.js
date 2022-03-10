@@ -1,6 +1,7 @@
 'use strict'
 
 const mongoose = require('mongoose')
+const debug = require('debug')('mad9124-w21-a2-mongo-crud')
 
 mongoose.connect('mongodb://localhost:27017/assignment-2', {
     useNewUrlParser: true,
