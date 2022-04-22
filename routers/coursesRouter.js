@@ -1,5 +1,6 @@
 const coursesRouter = require('express').Router()
 const Course = require('../models/Course')
+const sanitizeBody = require('../middleware/sanitizeBody')
 
 coursesRouter.get('/', async (req, res) => {
   const courses = await Course.find().populate('students')
